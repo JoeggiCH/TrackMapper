@@ -1,10 +1,8 @@
 # TrackMapper
+schweizmobil.ch is a service to discover and plan (mostly) hiking/biking tracks in Switzerland. Viewing tracks does not require a paid subscription, drawing own tracks does. The schweizmobil.ch UI is great but unfortunately can only show one of the user-created tracks at a time. I have 300+ tracks and struggle to keep the overview of what I planned/did in a given region.
 
-schweizmobil.ch is a service to discover and plan (mostly) hiking/biking tracks in Switzerland.
-Viewing tracks does not require a paid subscription, drawing own tracks does.
-
-This project 
+So, this project ..
 * uses the schweizmobil.ch API described at https://github.com/JoeggiCH/schweizmobil.ch-API to download all tracks of a given user (with a paid subscription)
-* converts tracks into WGS84 coordinates and a GeoJSON FeatureCollection.
-* renders the FeatureCollection in a browser-viewable map - using python folium and leaflet.js.
-* before rendering tracks can be filtered on multiple criteria, such as the length in kilometers, duration, meters uphill etc
+* allows users to filter tracks to include/exclude based on a number of criteria, such as the hike/bike length in kilometers, duration, meters uphill etc
+* converts tracks into WGS84 coordinates and a GeoJSON FeatureCollection
+* renders the FeatureCollection in a browser-viewable map (using python folium and leaflet.js)
