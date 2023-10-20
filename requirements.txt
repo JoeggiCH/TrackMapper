@@ -1,0 +1,6 @@
+cryptography==41.0.4
+folium==0.14.0
+pyproj==3.6.1
+PySimpleGUI==4.60.5
+PySimpleGUI==4.60.5
+Requests==2.31.0
