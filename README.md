@@ -1,7 +1,7 @@
 # TrackMapper
 
 schweizmobil.ch is a service to discover and plan (mostly) hiking/biking tracks in Switzerland.
-Viewing tracks does not require a paid subscription, designing own tracks does.
+Viewing tracks does not require a paid subscription, drawing own tracks does.
 
 This project 
 * uses the schweizmobil.ch API described at https://github.com/JoeggiCH/schweizmobil.ch-API to download all tracks of a given user (with a paid subscription)
