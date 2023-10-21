@@ -3,6 +3,6 @@ schweizmobil.ch is a service to discover and plan (mostly) hiking/biking tracks 
 
 So, this project ..
 * uses the schweizmobil.ch API described at https://github.com/JoeggiCH/schweizmobil.ch-API to download all tracks of a given user (with a paid subscription)
-* allows users to filter tracks to include/exclude based on a number of criteria, such as the hike/bike length in kilometers, duration, meters uphill etc
+* allows users to filter tracks based on a number of criteria, such as the hike/bike length in kilometers, duration, meters uphill etc
 * converts tracks into WGS84 coordinates and a GeoJSON FeatureCollection
 * renders the FeatureCollection in a browser-viewable map (using python folium and leaflet.js)
