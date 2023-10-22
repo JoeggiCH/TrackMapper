@@ -229,6 +229,11 @@ def showMain():
 
         if event=="Publish":
             os.chdir(IS.outfp)
+            script_dir = os.path.abspath( os.path.dirname( __file__ ) )
+            print( script_dir )
+            print (f"{script_dir}\\update_web.bat {IS.outfp} >>{IS.outfp}update_web.log")
+            os.system(f"{script_dir}\\update_web.bat {IS.outfp} >>{IS.outfp}update_web.log")
+
             os.system(IS.outfp+"update_web.bat >>update_web.log")
             continue
         
