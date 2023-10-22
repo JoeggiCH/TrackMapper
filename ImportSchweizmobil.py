@@ -86,13 +86,13 @@ def Import_Schweizmobil():
     try:
         #login 
         response = session.post(pre+'4/login',data=creds)
+        
         rst=response.status_code
         ErrC=response.json()['loginErrorCode']
-        
         if (rst!=200 or ErrC!=200):
             raise Exception (f"Authentication failed; ({rst}/{ErrC})")
         
-        # fetch the list of tracks 
+        # fetch the list of tracks
         response = session.get(pre+'5/tracks')
         if (debug>1): print ("Tracks API call ",response.status_code)
         
