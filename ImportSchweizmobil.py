@@ -86,23 +86,28 @@ def Import_Schweizmobil():
     try:
         #login 
         response = session.post(pre+'4/login',data=creds)
-        if (response.status_code!=200):
-            print ("Authentication failed - status code is ",response.status_code)
-            return
-
+        rst=response.status_code
+        ErrC=response.json()['loginErrorCode']
+        
+        if (rst!=200 or ErrC!=200):
+            raise Exception (f"Authentication failed; ({rst}/{ErrC})")
+        
         # fetch the list of tracks 
         response = session.get(pre+'5/tracks')
-        tracks=response.json()
         if (debug>1): print ("Tracks API call ",response.status_code)
         
         if (response.status_code==200):
+            tracks=response.json()
             # API was reachable, so let's write the response to a file, in case the API is
             # unreachable the next time around
             fi=open(trksfn,mode="w")
             print(response.text,file=fi)
             fi.close()
             if (debug>0): print ("Tracks API response cached",trksfn)
-    except:
+        else:
+            raise Exception(f"Status Code {response.status_code}")
+    except Exception as e:
+        print (e)
         print("Issues talking to schweizmobil.ch! Credentials? Offline ? Wrong API prefix?")
         try:
             print ("Trying to continue based on response cached earlier")

@@ -145,7 +145,8 @@ def showSettings():
         if (debug>0): print (e,v)
         
         # return filter unmodified, if window X was clicked
-        if (event ==sg.WIN_CLOSED):            
+        if (event ==sg.WIN_CLOSED):
+            DoSettings()
             return
 
         if (event=="folder"):
@@ -168,6 +169,28 @@ def showSettings():
             en.wr_enc_dict(npw, SettingsFolder+'trackmapper.conf', settings)
             DoSettings()
             window.close()
+
+def DoSettings():
+    if not isdir(settings['data_path']):
+        #assuming write perms
+        os.mkdir(settings['data_path'])
+        os.mkdir(settings['data_path']+'cache')
+        os.mkdir(settings['data_path']+'cache/schweizmobil.ch/')
+        os.mkdir(settings['data_path']+'GeoJSON')
+        os.mkdir(settings['data_path']+'html')
+
+    # derive the module settings from the main settings    
+    IS.outfp  =settings['data_path']
+    IS.creds = json.dumps({
+                    "username": settings['sm_username'],
+                    "password": settings['sm_password']
+                })
+    PM.infile =settings['data_path']+'GeoJSON/schweizmobil.GeoJSON'
+    PM.outfile=settings['data_path']+'html/map.html'
+
+    # those are currently not part of the main settings:
+    IS.debug=1
+    IS.opo=2
 
 
 def showMain():
@@ -230,10 +253,7 @@ def showMain():
         if event=="Publish":
             os.chdir(IS.outfp)
             script_dir = os.path.abspath( os.path.dirname( __file__ ) )
-            print( script_dir )
-            print (f"{script_dir}\\update_web.bat {IS.outfp} >>{IS.outfp}update_web.log")
             os.system(f"{script_dir}\\update_web.bat {IS.outfp} >>{IS.outfp}update_web.log")
-
             os.system(IS.outfp+"update_web.bat >>update_web.log")
             continue
         
@@ -249,33 +269,10 @@ def showMain():
             showSettings()
             continue
 
-
         if event=="Exit":
             window.close()
             break
 
-
-def DoSettings():
-    if not isdir(settings['data_path']):
-        #assuming write perms
-        os.mkdir(settings['data_path'])
-        os.mkdir(settings['data_path']+'cache')
-        os.mkdir(settings['data_path']+'cache/schweizmobil.ch/')
-        os.mkdir(settings['data_path']+'GeoJSON')
-        os.mkdir(settings['data_path']+'html')
-
-    # derive the module settings from the main settings    
-    IS.outfp  =settings['data_path']
-    IS.creds = json.dumps({
-                    "username": settings['sm_username'],
-                    "password": settings['sm_password']
-                })
-    PM.infile =settings['data_path']+'GeoJSON/schweizmobil.GeoJSON'
-    PM.outfile=settings['data_path']+'html/map.html'
-
-    # those are currently not part of the main settings:
-    IS.debug=1
-    IS.opo=2
     
 # --------------------------------------------------------------------------------------------
 # main
@@ -302,33 +299,31 @@ settings = {
 passw=""
 sg.theme("SystemDefaultForReal")
 
-
-
 if not isdir(SettingsFolder):
-    #assuming write perms
+    # first time startup!
     os.mkdir(SettingsFolder)
 
-if isfile(SettingsFolder+'trackmapper.conf'):
-    #decrypt file
-    p = sg.popup_get_text('Enter password to decrypt settings: ',
-        title="Password",password_char="*")
-    if p: passw=p
-    else: passw="default"
-    
-    #read settings file and decrypt
-    try:
+try:
+    if isfile(SettingsFolder+'trackmapper.conf'):
+        #decrypt file
+        p = sg.popup_get_text('Enter password to decrypt settings: ',
+            title="Password",password_char="*")
+        if p: passw=p
+        else: passw="default"
+        
+        #read settings file and decrypt
         nsettings=en.rd_dec_dict(passw,SettingsFolder+'trackmapper.conf')
         if nsettings:
             settings=nsettings
+            DoSettings()
         else:
-            print ("failed to decrypt, so defaulting settings")
-    except:
-        print (f"error fetching encrypted configuration file at {SettingsFolder+'trackmapper.conf'}")
-else:   
-    # write the first version of the conf file
+            raise Exception ("wrong password; defaulting settings")
+    else:
+        raise Exception ("no trackmapper.conf file found")
+except Exception as e:
+    # no valid settings available, so let's ask the user
+    print (e)
     passw='default'
-    en.wr_enc_dict(passw, SettingsFolder+'trackmapper.conf', settings)
-
-DoSettings()
+    showSettings()
 
 showMain()
