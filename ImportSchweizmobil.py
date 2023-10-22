@@ -76,34 +76,34 @@ def Import_Schweizmobil():
     global trksfn
     trksfn=outfp+SchweizmobCacheDir+"tracks response.geojson"
 
-    global outfn    
+    global outfn
     outfn=outfp+"GeoJSON/schweizmobil.GeoJSON"
 
     # init requests object
     session = requests.Session()
     session.headers={}
-    
+
     try:
-        #login 
+        #login
         response = session.post(pre+'4/login',data=creds)
-        
+
         rst=response.status_code
         ErrC=response.json()['loginErrorCode']
         if (rst!=200 or ErrC!=200):
             raise Exception (f"Authentication failed; ({rst}/{ErrC})")
-        
+
         # fetch the list of tracks
         response = session.get(pre+'5/tracks')
-        if (debug>1): print ("Tracks API call ",response.status_code)
-        
-        if (response.status_code==200):
+        if debug>1: print ("Tracks API call ",response.status_code)
+
+        if response.status_code==200:
             tracks=response.json()
             # API was reachable, so let's write the response to a file, in case the API is
             # unreachable the next time around
             fi=open(trksfn,mode="w")
             print(response.text,file=fi)
             fi.close()
-            if (debug>0): print ("Tracks API response cached",trksfn)
+            if debug>0: print ("Tracks API response cached",trksfn)
         else:
             raise Exception(f"Status Code {response.status_code}")
     except Exception as e:
@@ -129,11 +129,11 @@ def Import_Schweizmobil():
 
     k=0
     # process each track in the tracks reponse
-    if (debug>0): print("Start fetching track details")
+    if debug>0: print("Start fetching track details")
     for i in tracks:
         if ((debug>1) and (k==20)): break
-        if (debug>1): k=k+1
-        
+        if debug>1: k=k+1
+
         iid=i['id']
         ts=i['modified_at'].replace(":", "" )
         trkn=f'{outfp}{SchweizmobCacheDir}track {iid}-{ts}.geojson'
@@ -142,28 +142,29 @@ def Import_Schweizmobil():
         # to offload the API and speed up processing
         # result is the "track" dict representing the GeoJSON provided
         # by the schweizmobil.ch
-        if (not isfile(trkn)):
+        if not isfile(trkn):
             # API call to fetch the track detail
             response = session.get(pre+'4/tracks/'+str(iid))
-            if (response.status_code!=200):
-                print (f'API call to obtain details on track {iid} failed with status {response.status_code}')
+            if response.status_code!=200:
+                print (f'API call to obtain details on track {iid}\
+                    failed with status {response.status_code}')
                 return
-            if (debug>1): print (f"Track API call for {iid} successful")
-            
+            if debug>1: print (f"Track API call for {iid} successful")
+
             # prepare the dict "track" from response
             track=response.json()
-            
+
             fi=open(trkn,mode="w")
             print (response.text,file=fi)
             fi.close()
-            if (debug>0): print ("wrote track cache ", trkn)
-            
+            if debug>0: print ("wrote track cache ", trkn)
+
         else: # read from cache file
             fi=open(trkn,mode="r")
             # make dict track from file
             track=json.load(fi)
             fi.close()
-            if (debug>1):print ("read track cache ", trkn)
+            if debug>1:print ("read track cache ", trkn)
 
         # reformat properties
         # handling exceptions here as the format/availability of the
@@ -174,17 +175,17 @@ def Import_Schweizmobil():
             fmt='%Y-%m-%dT%H:%M:%SZ'
             mstmp=datetime.strptime(i['modified_at'],'%Y-%m-%dT%H:%M:%SZ')
             datestr=mstmp.strftime("%d. %b %Y")
-            
+
             if (props['userdate']!="null" and props['userdate']!=None):
                 ustmp=datetime.strptime(props['userdate'],'%Y-%m-%d')
                 ud=ustmp.strftime("%d. %b %Y")
 
             # Winter hike and snowshoe hike unhandled for the time being
-            if (i['timetype']=="wander"):
+            if i['timetype']=="wander":
                 tt="hike"
                 minutes=round(props['meta']['walking'])
                 ttime=str(timedelta(minutes=minutes))
-                
+
             else:
                 tt="bike"
                 minutes=round(props['meta']['biking'])
@@ -207,7 +208,7 @@ def Import_Schweizmobil():
                 'Max elevation':str(round(props['meta']['elemax']))+" m"
              }
         except Exception as e:
-            if (debug>0): print (f'Track {iid}: properties incomplete - skipping')
+            if debug>0: print (f'Track {iid}: properties incomplete - skipping')
             print(str(e))
             continue
 
@@ -225,7 +226,7 @@ def Import_Schweizmobil():
         if (x<float(Filter["MinUp"]) or x>float(Filter["MaxUp"])):
             if debug>1: print (f"skipping track {iid} because of Total up filter")
             continue
-        
+
         if Filter["Nincludes"]:
             if not Filter["Nincludes"].lower() in i["name"].lower():
                 if debug>1: print (f"skipping track {iid} because of Name includes filter")
@@ -235,19 +236,21 @@ def Import_Schweizmobil():
             if Filter["Nexcludes"].lower() in i["name"].lower():
                 if debug>1: print (f"skipping track {iid} because of Name excludes filter")
                 continue
-            
+
         mminf=datetime.strptime(Filter["MinMdate"],'%d/%m/%Y')
         mmaxf=datetime.strptime(Filter["MaxMdate"],'%d/%m/%Y')
         if mstmp<mminf or mstmp>mmaxf:
-                if debug>1: print (f"skipping track {iid} because of modified date filter")
-                continue
+            if debug>1:
+                print (f"skipping track {iid} because of modified date filter")
+            continue
 
         if (props['userdate']!="null" and props['userdate']!=None):
             mminf=datetime.strptime(Filter["MinUdate"],'%d/%m/%Y')
             mmaxf=datetime.strptime(Filter["MaxUdate"],'%d/%m/%Y')
             if ustmp<mminf or ustmp>mmaxf:
-                    if debug>1: print (f"skipping track {iid} because of user date filter")
-                    continue
+                if debug>1:
+                    print (f"skipping track {iid} because of user date filter")
+                continue
 
         if Filter["id"]:
             if str(i["id"])!=Filter["id"]:
@@ -258,22 +261,21 @@ def Import_Schweizmobil():
             if debug>1: print (f"skipping track {iid} because of track type filter")
             continue
 
-        
         if (i['timetype']=="velo") and (not Filter["bike"]):
             if debug>1: print (f"skipping track {iid} because of track type filter")
             continue
 
         # transform/reformat coordinates, find enclosing rectangle etc
         # finish constructing the feature dict representing the track
-        
+
         # skip this track if the format does not contain the
         # expected properties.via_points dict
         try:
             via=json.loads(props["via_points"])
         except:
-            if (debug>0): print (f'Track {iid}: no via data - skipping')
+            if debug>0: print (f'Track {iid}: no via data - skipping')
             continue
-      
+
         # find the coordinates of the rectangle enclosing
         # the via max/min values
         # via points are the points selected by the schweizmobil.ch user
@@ -293,13 +295,14 @@ def Import_Schweizmobil():
         if (lonmin>float(Filter["MaxLon"]) or lonmax<float(Filter["MinLon"])):
             if debug>1: print (f"skipping track {iid} because of longitude filter")
             continue
-        
+
         if (latmin>float(Filter["MaxLat"]) or latmax<float(Filter["MinLat"])):
-            if debug>1: print (f"skipping track {iid} because of latitude filter");
+            if debug>1:
+                print (f"skipping track {iid} because of latitude filter");
             continue
 
         # prepare feature structure
-        if (opo==0):
+        if opo==0:
             feature={
                 'type':'Feature',
                 'geometry': {
@@ -314,7 +317,7 @@ def Import_Schweizmobil():
                 },
                 'properties': newprops
             }
-                    
+   
         if (opo==1):                    
             feature={
                 'type':'Feature',
@@ -324,14 +327,14 @@ def Import_Schweizmobil():
                 },
                 'properties': newprops
             }
-            
-        if (opo==2):
+
+        if opo==2:
             try:
                 coord=track['geometry']['coordinates']
                 for j in coord:
                     (j[1],j[0])=trafo.transform(j[0],j[1])
             except:
-                if (debug>0): print (f'Track {iid}: no Geometry.Coordinates data - skipping')
+                if debug>0: print (f'Track {iid}: no Geometry.Coordinates data - skipping')
                 continue
 
             feature={
@@ -340,28 +343,25 @@ def Import_Schweizmobil():
                 'properties': newprops
             }
 
-        
         # append the feature dict (current track) to the geo dict (collection of tracks)
         if (opo==0 or opo==1 or opo==2):
             geo['features'].append(feature)
 
     if geo['features']!=[]:
-        if (debug>0):
+        if debug>0:
             match opo:
-                    case 0: print ("Output includes only a bounding box")
-                    case 1: print ("Output includes via coordinates")
-                    case 2: print ("Output includes full track coordinates")
-                    case _: print ("Unsupported opo parameter value - no track/features written")
+                case 0: print ("Output includes only a bounding box")
+                case 1: print ("Output includes via coordinates")
+                case 2: print ("Output includes full track coordinates")
+                case _: print ("Unsupported opo parameter value - no track/features written")
 
         f=open(f'{outfn}',mode="w")
-        if (debug<2):
+        if debug<2:
             print (json.dumps(geo),file=f)
         else:
             print (json.dumps(geo, indent="\t"),file=f)
         f.close()
-        
-        if (debug>0): print(f"GeoJSON with schweizmobil.ch tracks written: {outfn}")
+
+        if debug>0: print(f"GeoJSON with schweizmobil.ch tracks written: {outfn}")
     else:
         print("\nAfter filtering there were no more tracks, map not updated!\n")
-    
-   
