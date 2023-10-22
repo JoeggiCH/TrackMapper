@@ -70,7 +70,7 @@ def showFilter(fparam):
     except:
         print ("Failed to initialize window"); sys.exit()
 
-    # The SimpleGUI event Loop
+    # The SimpleGUI event loop
     while True:
         event, v = window.read()
 
