@@ -81,7 +81,7 @@ def showFilter(fparam):
     except:
         print ("Failed to initialize window"); sys.exit()
 
-    # The SimpleGUI event loop
+    # The Filter window event loop
     while True:
         event, v = window.read()
 
@@ -149,7 +149,7 @@ def showSettings():
     npw=passw
     nfolder=settings['data_path']
     
-    # The SimpleGUI event Loop
+    # The Settings window event Loop
     while True:
         event, v = window.read()
 
@@ -236,13 +236,13 @@ def showMain():
         [sg.Button('Settings',key='set'),sg.Push(),sg.Button('Exit',key="Exit")]]
     
     try:
-        window = sg.Window('Show Tracks',
+        window = sg.Window('Track Mapper',
             layout,  default_button_element_size=(4,2),
             use_default_focus=False,finalize=True)
     except:
         print ("Failed to initialize window"); sys.exit()
 
-    # The SimpleGUI event Loop
+    # The Main window event Loop
     while True:
         event, v = window.read()
 
