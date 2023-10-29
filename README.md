@@ -6,3 +6,5 @@ So, this project ..
 * allows users to filter tracks based on a number of criteria, such as the hike/bike length in kilometers, duration, meters uphill etc
 * converts tracks into WGS84 coordinates and a GeoJSON FeatureCollection
 * renders the FeatureCollection in a browser-viewable map (using python folium and leaflet.js)
+
+Please note that I am not affiliated in any way with schweizmobil.ch foundation and this repo is not an official publication of schweizmobil.ch. I created this repo for my training and because I was unable to find online documentation of this API.
