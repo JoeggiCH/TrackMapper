@@ -182,12 +182,20 @@ def showSettings():
             window.close()
 
 def DoSettings():
+    #assuming write perms
     if not isdir(settings['data_path']):
-        #assuming write perms
         os.mkdir(settings['data_path'])
+
+    if not isdir(settings['data_path']+'cache'):
         os.mkdir(settings['data_path']+'cache')
+
+    if not isdir(settings['data_path']+'cache/schweizmobil.ch/'):
         os.mkdir(settings['data_path']+'cache/schweizmobil.ch/')
+
+    if not isdir(settings['data_path']+'GeoJSON'):
         os.mkdir(settings['data_path']+'GeoJSON')
+
+    if not isdir(settings['data_path']+'html'):
         os.mkdir(settings['data_path']+'html')
 
     # derive the module settings from the main settings    
