@@ -298,7 +298,7 @@ def Import_Schweizmobil():
 
         if (latmin>float(Filter["MaxLat"]) or latmax<float(Filter["MinLat"])):
             if debug>1:
-                print (f"skipping track {iid} because of latitude filter");
+                print (f"skipping track {iid} because of latitude filter")
             continue
 
         # prepare feature structure
@@ -317,8 +317,8 @@ def Import_Schweizmobil():
                 },
                 'properties': newprops
             }
-   
-        if (opo==1):                    
+
+        if opo==1:
             feature={
                 'type':'Feature',
                 'geometry': {
