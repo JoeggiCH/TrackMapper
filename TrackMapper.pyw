@@ -218,25 +218,20 @@ def showMain():
     insize=(12,1)
 
     frame1=[
-        [sg.Button('Filter',key="FilterSM"),sg.Text("  =>  "),
-         sg.Button('Fetch',key="FetchSM"),sg.Text("  =>  "),
-         sg.Button('Publish',key="Publish")],
+        [sg.Button('Set Filter',key="FilterSM"),sg.Text("  =>  "),
+         sg.Button('Fetch Data & Apply Filter',key="FetchSM"),sg.Text("  =>  "),
+         sg.Button('Open',key="OpenLocal")],
         [sg.Radio("Bounding Box",group_id='opo'),
          sg.Radio("Vias",group_id='opo'),
          sg.Radio("Detailed tracks",group_id='opo',default=True)]]
 
     frame2=[
-        [sg.Button('Local',key="WriteLocal"),
-        sg.Button('Local & Web',key="WriteWeb")]]
-
-    frame3=[
-        [sg.Button('Local',key="OpenLocal"),
-         sg.Button('Web',key="OpenWeb")]]
-
+        [sg.Button('Publish',key="Publish"),
+         sg.Button('Open',key="OpenWeb")]]
 
     layout = [
         [sg.Frame ("schweizmobil.ch",frame1,expand_x=True)],
-        [sg.Frame ("Open Map in browser",frame3,expand_x=True)],
+        [sg.Frame ("On Web",frame2,expand_x=True)],
         [sg.Output(size=(80, 10))],   
         [sg.Button('Settings',key='set'),sg.Push(),sg.Button('Exit',key="Exit")]]
     
