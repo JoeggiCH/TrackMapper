@@ -7,4 +7,4 @@ So, this project ..
 * converts tracks into WGS84 coordinates and a GeoJSON FeatureCollection
 * renders the FeatureCollection in a browser-viewable map (using python folium and leaflet.js)
 
-Please note that I am not affiliated in any way with schweizmobil.ch foundation and this repo is not an official publication of schweizmobil.ch. I created this project for my training and because I was unable to find another solution for my need.
+Please note that I am not affiliated in any way with the schweizmobil.ch foundation and this repo is not an official publication of schweizmobil.ch. I created this repo for my training and because I was unable to find another solution for my need.
