@@ -1,3 +1,9 @@
+"""
+encryption.py uses the fernet module to encrypt the configuration file - including
+the API passwords - in TrackMapper
+
+"""
+
 # https://cryptography.io/en/latest/
 # https://www.pythoninformer.com/python-libraries/cryptography/fernet/
 

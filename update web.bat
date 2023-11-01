@@ -2,6 +2,8 @@
 REM this is an example of a batch to publish html\map.html on a webpage
 REM please adjust it to your needs!
 
+echo ===========================================================
+echo new pub request 
 date /t
 time /t
 cd %1

@@ -1,3 +1,14 @@
+"""
+schweizmobil.ch is a service to discover and plan (mostly) hiking/biking tracks in Switzerland. Viewing tracks does not require a paid subscription, drawing own tracks does. The schweizmobil.ch UI is great but unfortunately can only show one of the user-created tracks at a time. I have 300+ tracks and struggle to keep the overview of what I planned/did in a given region.
+
+So, this project ..
+
+- uses the schweizmobil.ch API described at https://github.com/JoeggiCH/schweizmobil.ch-API to download all tracks of a given user (with a paid subscription)
+- allows users to filter tracks based on a number of criteria, such as the hike/bike length in kilometers, duration, meters uphill etc
+- converts tracks into WGS84 coordinates and a GeoJSON FeatureCollection
+- renders the FeatureCollection in a browser-viewable map (using python folium and leaflet.js)
+
+"""
 import PySimpleGUI as sg
 from datetime import datetime
 import ImportSchweizmobil as IS
@@ -70,7 +81,7 @@ def showFilter(fparam):
     except:
         print ("Failed to initialize window"); sys.exit()
 
-    # The SimpleGUI event loop
+    # The Filter window event loop
     while True:
         event, v = window.read()
 
@@ -138,7 +149,7 @@ def showSettings():
     npw=passw
     nfolder=settings['data_path']
     
-    # The SimpleGUI event Loop
+    # The Settings window event Loop
     while True:
         event, v = window.read()
 
@@ -171,12 +182,20 @@ def showSettings():
             window.close()
 
 def DoSettings():
+    #assuming write perms
     if not isdir(settings['data_path']):
-        #assuming write perms
         os.mkdir(settings['data_path'])
+
+    if not isdir(settings['data_path']+'cache'):
         os.mkdir(settings['data_path']+'cache')
+
+    if not isdir(settings['data_path']+'cache/schweizmobil.ch/'):
         os.mkdir(settings['data_path']+'cache/schweizmobil.ch/')
+
+    if not isdir(settings['data_path']+'GeoJSON'):
         os.mkdir(settings['data_path']+'GeoJSON')
+
+    if not isdir(settings['data_path']+'html'):
         os.mkdir(settings['data_path']+'html')
 
     # derive the module settings from the main settings    
@@ -199,36 +218,31 @@ def showMain():
     insize=(12,1)
 
     frame1=[
-        [sg.Button('Filter',key="FilterSM"),sg.Text("  =>  "),
-         sg.Button('Fetch',key="FetchSM"),sg.Text("  =>  "),
-         sg.Button('Publish',key="Publish")],
+        [sg.Button('Set Filter',key="FilterSM"),sg.Text("  =>  "),
+         sg.Button('Fetch Data & Apply Filter',key="FetchSM"),sg.Text("  =>  "),
+         sg.Button('Open',key="OpenLocal")],
         [sg.Radio("Bounding Box",group_id='opo'),
          sg.Radio("Vias",group_id='opo'),
          sg.Radio("Detailed tracks",group_id='opo',default=True)]]
 
     frame2=[
-        [sg.Button('Local',key="WriteLocal"),
-        sg.Button('Local & Web',key="WriteWeb")]]
-
-    frame3=[
-        [sg.Button('Local',key="OpenLocal"),
-         sg.Button('Web',key="OpenWeb")]]
-
+        [sg.Button('Publish',key="Publish"),
+         sg.Button('Open',key="OpenWeb")]]
 
     layout = [
         [sg.Frame ("schweizmobil.ch",frame1,expand_x=True)],
-        [sg.Frame ("Open Map in browser",frame3,expand_x=True)],
+        [sg.Frame ("On Web",frame2,expand_x=True)],
         [sg.Output(size=(80, 10))],   
         [sg.Button('Settings',key='set'),sg.Push(),sg.Button('Exit',key="Exit")]]
     
     try:
-        window = sg.Window('Show Tracks',
+        window = sg.Window('Track Mapper',
             layout,  default_button_element_size=(4,2),
             use_default_focus=False,finalize=True)
     except:
         print ("Failed to initialize window"); sys.exit()
 
-    # The SimpleGUI event Loop
+    # The Main window event Loop
     while True:
         event, v = window.read()
 
@@ -253,8 +267,11 @@ def showMain():
         if event=="Publish":
             os.chdir(IS.outfp)
             script_dir = os.path.abspath( os.path.dirname( __file__ ) )
-            os.system(f"{script_dir}\\update_web.bat {IS.outfp} >>{IS.outfp}update_web.log")
-            #os.system(IS.outfp+"update_web.bat >>update_web.log")
+            winpath=IS.outfp.replace("/","\\")           
+            cmd=f"\"\"{script_dir}\\update web.bat\" \"{winpath}\" >>\"{winpath}update web.log\"\""
+            if debug>0: print (cmd)
+            os.system(cmd)
+
             continue
         
         if event=="OpenLocal":

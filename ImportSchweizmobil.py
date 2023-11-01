@@ -18,6 +18,7 @@ import json
 import pyproj
 from os.path import isfile,exists,expanduser
 from datetime import datetime, timedelta
+import PySimpleGUI as sg
 
 # The following variables are made global and are set prior to
 # exececuting ImportSchweizmobil()
@@ -118,6 +119,14 @@ def Import_Schweizmobil():
             print ("No cache file - giving up !")
             return
 
+    # setup progress bar
+    # layout the form
+    layout = [[sg.Text(f'Processing {len(tracks)} tracks')],
+              [sg.ProgressBar(max_value=len(tracks), orientation='h', size=(20, 20), key='progress')]]
+
+    window = sg.Window('Progress', layout, finalize=True)
+    progress_bar = window['progress']
+
     # setup transformer object to transform
     # Swiss LV03 coordinates used by schweizmobil.ch to WGS84
     trafo=pyproj.Transformer.from_crs(21781,4326)
@@ -128,12 +137,13 @@ def Import_Schweizmobil():
          }
 
     k=0
+    included=0
     # process each track in the tracks reponse
     if debug>0: print("Start fetching track details")
     for i in tracks:
         if ((debug>1) and (k==20)): break
-        if debug>1: k=k+1
-
+        k=k+1
+        progress_bar.update_bar(k)
         iid=i['id']
         ts=i['modified_at'].replace(":", "" )
         trkn=f'{outfp}{SchweizmobCacheDir}track {iid}-{ts}.geojson'
@@ -346,6 +356,10 @@ def Import_Schweizmobil():
         # append the feature dict (current track) to the geo dict (collection of tracks)
         if (opo==0 or opo==1 or opo==2):
             geo['features'].append(feature)
+            included+=1
+
+    # close the progress bar window
+    window.close()
 
     if geo['features']!=[]:
         if debug>0:
@@ -354,6 +368,7 @@ def Import_Schweizmobil():
                 case 1: print ("Output includes via coordinates")
                 case 2: print ("Output includes full track coordinates")
                 case _: print ("Unsupported opo parameter value - no track/features written")
+            print (f"Included {included} of {len(tracks)} tracks")
 
         f=open(f'{outfn}',mode="w")
         if debug<2:
