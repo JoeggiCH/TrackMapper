@@ -60,7 +60,6 @@ def decrypt(pw,encrypted_data) -> str:
     f = Fernet(key)
     # and encrypt something
     
-    if (debug): print ("cleartext is ",token)
     try:
         cleartext = f.decrypt(encrypted_data)
         if (debug): print ("cleartext is ",cleartext.decode())
