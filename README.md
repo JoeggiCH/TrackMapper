@@ -7,6 +7,11 @@ So, this project ..
 * converts tracks into WGS84 coordinates and a GeoJSON FeatureCollection
 * renders the FeatureCollection in a browser-viewable map (using python folium and leaflet.js)
 
+I developed and tested this code (a little) under Windows. 
+I also did an installation under a local Ubuntu and the code started but at least one button did not work as expected. Also, I had to install tkinter separately as a binary and pySimpleGUI required an extra step to register in order to get a named user license.
+
+To start, please invoke '''python TrackMapper.pyw'''
+
 Please note that I am not affiliated in any way with the schweizmobil.ch foundation and this repo is not an official publication of schweizmobil.ch. I created this repo for my training and because I was unable to find another solution for my need.
 
 Joerg
