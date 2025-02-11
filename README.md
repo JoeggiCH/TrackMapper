@@ -19,11 +19,13 @@ To start, please invoke ```python TrackMapper.pyw```
 
 
 And..
-- TrackMapper.py will ask for your schweizmobil.ch credentials and will store them locally in an encrypted file
+- TrackMapper.py will ask for your schweizmobil.ch credentials and will store them locally in an encrypted file.
 - You can choose a password for that encrypted file. By default there is no password.
-- Once the password file is available, at the next startup TrackMapper.pyw will ask for the password to decrypt the password file. Just hitting 'return' without will work for the empty, default password.
+- Once the password file is available, at the next startup TrackMapper.pyw will ask for the password to decrypt the password file. Just hitting 'return' will work for the empty, default password.
 - TrackMapper.py creates a local cache of the tracks, which speeds up fetching tracks from the second time on.
 
 Please note that I am not affiliated in any way with the schweizmobil.ch foundation and this repo is not an official publication of schweizmobil.ch. I created this repo for my training and because I was unable to find another solution for my need.
+
+Feedback & questions are welcome !
 
 Feb 2025, Joerg
