@@ -16,7 +16,7 @@ Please use ```python3 TrackMapper.pyw``` to start
 - the html file contains GeoJSON representations of the tracks and the leaflet code to render the tracks on various base maps 
 - The button ```Open``` will open the local map.html file in the default browser
 - ```Publish``` executes an external script 'update web.bat', which pushes map.html to a web server of your choice - IF you have modified 'update web.bat' to do so!
-- ```Open``` will open the published version of map.html on the default web browser. 
+- ```Open``` (next to Publish) will open the published version of map.html on the default web browser. 
 
 And..
 - TrackMapper.py will ask for your schweizmobil.ch credentials and will store them locally in an encrypted file.
