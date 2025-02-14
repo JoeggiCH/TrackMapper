@@ -33,4 +33,4 @@ Feb 2025, Joerg
 
 Some screenshots
 
-! [screenshot](./images/screenshot1.png)
+! [screenshot](images/screenshot1.png)
