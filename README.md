@@ -29,3 +29,8 @@ Please note that I am not affiliated in any way with the schweizmobil.ch foundat
 Feedback & questions are welcome !
 
 Feb 2025, Joerg
+
+
+Some screenshots
+
+! [screenshot](./images/screenshot1.png)
