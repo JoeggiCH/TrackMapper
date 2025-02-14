@@ -30,8 +30,7 @@ Feedback & questions are welcome !
 
 Feb 2025, Joerg
 
-
-_Some screenshots_
+**Some screenshots below !**
 
 Main dialog
 
