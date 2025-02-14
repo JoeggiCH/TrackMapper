@@ -31,6 +31,17 @@ Feedback & questions are welcome !
 Feb 2025, Joerg
 
 
-Some screenshots
+_Some screenshots_
 
-<img src='./images/screenshot1.png'>
+Main dialog 
+<img src='./images/main.png'>
+
+Track filtering options
+<img src='./images/filter.png'>
+
+map.html in browser, tracks rendered in purple/violet; on top of a colored swisstopo background map
+<img src='./images/map1.png'>
+
+
+map.html in browser, with track details window; rendered in purple/violet; on top of a grey swisstopo background map
+<img src='./images/map2.png'>
