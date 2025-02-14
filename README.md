@@ -8,7 +8,7 @@ So, this project ..
 * renders the FeatureCollection in a browser-viewable map (using python folium and leaflet.js)
 
 I developed and tested this code (a little) under Windows. 
-I also did an installation under a local Ubuntu and the code started but at least one button did not work as expected. Also, I had to install tkinter separately as a binary and pySimpleGUI required an extra step to register in order to get a named user license.
+I also did an installation under a local Ubuntu and the code worked. However, I had to install tkinter separately as a binary and pySimpleGUI required an extra registration/licensing step.
 
 Please use ```python3 TrackMapper.pyw``` to start
 - The button ```Set Filter``` brings up a window with filter criteria, which the code will apply to fetch track data from schweizmobil.ch
@@ -30,8 +30,7 @@ Feedback & questions are welcome !
 
 Feb 2025, Joerg
 
-
-_Some screenshots_
+**Some screenshots below !**
 
 Main dialog
 
